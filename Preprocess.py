@@ -3,16 +3,19 @@
 from PIL import Image
 
 
-def binImagePrinter(binImage):
+def binImagePrinter(binImage,mode = "default"):
     '''
         binImage must be a binarized image.
         In the output,0 = black ,1 = white.
     '''
+    transformer=["0","1"]
+    if mode == "special":
+        transformer = ["*"," "]
     for y in range(binImage.height):
         for x in range(binImage.width):
-            print(binImage.getpixel((x,y)),end=' ')
+            print(transformer[binImage.getpixel((x,y))],end=' ')
         print("\n")
-    print("\n\n\n\n\n")
+    print("\n\n\n")
 
 def ridNoise(binImage):
     '''
@@ -52,8 +55,10 @@ def cutAndSaveImage(binImage,num):
     #imageOutputPath="CuttedVcode/" + str(num) + ".jpg"
     #binImage.save(imageOutputPath)
     binImage=binImage.point(lambda x:x*255)
+    #binImagePrinter(binImage)
     for i in range(0,4):
         subImage=binImage.crop((10*i+1,0,10*i+9,10))
+        #imageOutputPath="CuttedVcodeBMP/" + str(num) + "-" + str(i) + ".bmp"
         imageOutputPath="CuttedVcode/" + str(num) + "-" + str(i) + ".jpg"
         #binImagePrinter(subImage)
         subImage.save(imageOutputPath)
