@@ -13,7 +13,7 @@ def binImagePrinter(binImage,mode = "default"):
         transformer = ["*"," "]
     for y in range(binImage.height):
         for x in range(binImage.width):
-            print(transformer[binImage.getpixel((x,y))],end=' ')
+            print(transformer[binImage.getpixel((x,y))],end='  ')
         print("\n")
     print("\n\n\n")
 
