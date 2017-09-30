@@ -48,7 +48,7 @@ def ridNoise(binImage):
             if(isNoise(x,y)==True):
                 binImage.putpixel((x,y),1)
 
-def cutAndSaveImage(binImage,num):
+def cutAndSaveImage(binImage,num,imageOutputPath="CuttedVcode"):
     '''
         a
     '''
@@ -56,12 +56,14 @@ def cutAndSaveImage(binImage,num):
     #binImage.save(imageOutputPath)
     binImage=binImage.point(lambda x:x*255)
     #binImagePrinter(binImage)
+    imagePaths=[]
     for i in range(0,4):
         subImage=binImage.crop((10*i+1,0,10*i+9,10))
         #imageOutputPath="CuttedVcodeBMP/" + str(num) + "-" + str(i) + ".bmp"
-        imageOutputPath="CuttedVcode/" + str(num) + "-" + str(i) + ".jpg"
         #binImagePrinter(subImage)
-        subImage.save(imageOutputPath)
+        subImage.save(imageOutputPath + "/" + str(num) + "-" + str(i) + ".jpg")
+        imagePaths.append(imageOutputPath + "/" + str(num) + "-" + str(i) + ".jpg")
+    return imagePaths
 
 
 if __name__=="__main__":

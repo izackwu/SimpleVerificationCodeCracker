@@ -4,8 +4,9 @@ import glob
 import Preprocess
 from PIL import Image
 
-def getFeature(binImage):
+def getFeature(imagePath):
     featureList=[]
+    binImage=Image.open(imagePath).point(lambda x :x>140)
     for y in range(binImage.height):
         temp=0
         for x in range(binImage.width):
@@ -21,14 +22,12 @@ def getFeature(binImage):
 
 if __name__ == '__main__':
     folders="ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
-    featureFilePath="feature.data"
+    featureFilePath="Feature.data"
     for eachFolder in folders:
         allImagePaths=glob.iglob("ClassifiedVcode/" + eachFolder + "/*.jpg")
         bufferString=""
         for eachImagePath in allImagePaths:
-            eachImage=Image.open(eachImagePath)
-            eachImage=eachImage.point(lambda x :x>140)
-            featureList=getFeature(eachImage)
+            featureList=getFeature(eachImagePath)
             #print(eachFolder,featureList)
             bufferString+=str(ord(eachFolder)) +  " "
             for (index,value) in enumerate(featureList):
