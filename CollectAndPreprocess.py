@@ -9,8 +9,12 @@ from PIL import Image
 
 
 def checkBeforeRunning():
+    '''
+        This function checks whether config.ini has been modified correctly.
+        If not, return False.
+    '''
     modified=False
-    try:
+    try:    #In case that config.ini doesn't exist.
         config=configparser.ConfigParser()
         config.read("config.ini")
         modified=config.getboolean("flag","modified")
@@ -20,6 +24,10 @@ def checkBeforeRunning():
 
 
 def downloader():
+    '''
+        Read config from config.ini and download vcodes.
+        Return the number of vcodes downloaded successfully.
+    '''
     print("Start to download vcodes now.")
     config=configparser.ConfigParser()
     config.read("config.ini")
@@ -45,8 +53,7 @@ def downloader():
                 successNum+=1
                 print("\rDownloaded {0} of {1} vcodes successfully!".format(successNum,num),end="")
                 break
-    config.set("download", "successnum",str(successNum))
-    config.write(open("config.ini","w"))
+    return successNum
 
 
 def binImagePrinter(binImage,mode = "default"):
@@ -98,7 +105,8 @@ def ridNoise(binImage):
 
 def cutAndSaveImage(binImage,num,imageOutputFolder):
     '''
-        waiting to be written...
+        Cut binImage into single characters and save in imageOutputFolder as num-x.jpg.
+        Return the paths of single characters.
     '''
     binImage=binImage.point(lambda x:x*255)
     imagePaths=[]
@@ -119,11 +127,13 @@ def cutAndSaveImage(binImage,num,imageOutputFolder):
     return imagePaths
 
 
-def preprocessor():
+def preprocessor(successNum):
+    '''
+        After downloading, preprocess every vcode.
+    '''
     print("Start to preprocess vcodes now.")
     config=configparser.ConfigParser()
     config.read("config.ini")
-    successNum=config.getint("download", "successnum")
     folderOfRawVcode=config.get("download", "folder")
     folderOfCuttedVcode=config.get("preprocess","folder")
     if os.path.exists(folderOfCuttedVcode)== False:
@@ -137,17 +147,18 @@ def preprocessor():
         imageBin=imageGrey.point(lambda x : x >140)
         #binImagePrinter(imageBin)     #Print the binarized image for debugging.
         ridNoise(imageBin)
-        binImagePrinter(imageBin)
+        #binImagePrinter(imageBin)
         cutAndSaveImage(imageBin,i,imageOutputFolder=folderOfCuttedVcode)
+        print("\rPreprocessed {0} of {1} vcodes successfully!".format(i+1,successNum),end="")
 
 
 if __name__ == "__main__":
     if checkBeforeRunning()==False:
         print("Please modify config.ini correctly before running this program.")
         exit()
-    downloader()
-    preprocessor()
-    print("Vcodes have been collected and preprocessed successfully.")
+    successNum=downloader()
+    preprocessor(successNum)
+    print("\nVcodes have been collected and preprocessed successfully.")
     print("Please run classify.py to classify images artificially.")
 
 
