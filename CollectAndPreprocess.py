@@ -127,7 +127,7 @@ def cutAndSaveImage(binImage,num,imageOutputFolder):
     return imagePaths
 
 
-def preprocessor(successNum):
+def preprocessorAll(successNum):
     '''
         After downloading, preprocess every vcode.
     '''
@@ -157,7 +157,7 @@ if __name__ == "__main__":
         print("Please modify config.ini correctly before running this program.")
         exit()
     successNum=downloader()
-    preprocessor(successNum)
+    preprocessorAll(successNum)
     print("\nVcodes have been collected and preprocessed successfully.")
     print("Please run classify.py to classify images artificially.")
 
